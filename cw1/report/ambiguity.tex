@@ -1,0 +1,25 @@
+During the classification phase, while the \emph{testTrees()} function was
+being executed two different ambiguity cases were discovered. 
+
+\begin{enumerate}
+\item Several elements of the vector \emph{y} which contains the label
+predictions had the value 0. That means that the classifier was unable to
+classify those examples.
+\item Some examples were classified with more than one class.
+\end{enumerate}
+
+As a result of the first case, the cross-validation had 14\% average error, as
+the decision tree couldn't find an emotion to match it with the example. To
+solve this problem, the following process was implemented. After the
+classification of each of the ten subsets, each label prediction inside the
+vector \emph{y} that has the value 0 is replaced with the most frequently occurred value of the specific subset.
+
+For the second phase two strategies have been tested. The first strategy was to
+match the examples, which had more than one classification, with one random
+candidate among those classifications. The second strategy was to pick the
+emotion from the decision tree where the positive classification occurred at
+the deepest leaf node.
+
+Having tested both strategies, the result of the first
+strategy fluctuates between 0,08 and 0,12 while the other one produces a stable
+average error equal to 0,1.

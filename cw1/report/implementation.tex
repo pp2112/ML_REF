@@ -1,0 +1,28 @@
+The first part of the implementation was to retrieve the data from
+\emph{cleandata\_students.txt} file and store the values in an examples matrix and targets
+vector. For the decision learning algorithm to be implemented we had to input
+the target vector for each emotion. Therefore, all the contents in the targets
+vector are replaced by 1 if they correspond to the class for which we
+want the decision tree to be created for or replaced by 0 otherwise.
+
+The decision tree learning algorithm is then generated with the given set of
+examples which is used
+as input along with the corresponding labels and the emotion class for which
+the tree will be created for.
+
+For the decision learning algorithm there are three cases each time
+it is called. The first one checks if all the contents in targets have the same
+value and if they are, a leaf node is returned with that value. The second case is
+when the attributes list is empty, meaning that no attributes are left to
+examine and again a leaf node is returned, but this time with the class equal to
+the value that appears more often in the targets vector. If none of the above
+occur, it means that an internal node has to be created. For this node the attribute
+that contributes the most in choosing the target must be found. This is done,
+using the \emph{choose\_best\_decision\_attribute()} function that implements
+the ID3 algorithm. The algorithm requires the calculation of gain for each
+attribute(column) and returns the one with the larger gain. After the best
+attribute is retrieved, we create new examples data sets, where the specific
+attribute is equal to 0 or 1.
+
+Finally we create a branch node for each of the
+distinct values that can either be a leaf node or an internal node.

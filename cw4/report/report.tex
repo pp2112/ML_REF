@@ -1,0 +1,277 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[margin=2cm]{geometry}
+%\usepackage{anysize}
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+\usepackage{fixltx2e}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{wrapfig}
+\usepackage{color}
+\usepackage{subfig}
+\usepackage{fancyhdr}
+\usepackage{newclude}
+\usepackage[nodayofweek]{datetime}
+\usepackage[small,compact]{titlesec}
+\usepackage[pdfborder=0]{hyperref}
+\longdate
+
+\setlength{\parskip}{11pt} 
+\setlength\parindent{0pt}
+
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{\fancyplain{}{Machine Learning CBC}}
+\rhead{\fancyplain{}{\today}}
+\cfoot{\fancyplain{}{\thepage}}
+
+
+\title{395 Machine Learning\\\Large{--- Assignment 5 ---}}
+\author{Group 7\\Porfyrios Vasileiou, Afxentios Hadjiminas, John Flanagan.\\
+       \{pv311, ah2411, jf311\}@doc.ic.ac.uk\\ \\
+       \small{CBC helper: Ioannis Marras}\\
+       \small{Course: CO395, Imperial College London}
+}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+In this final coursework we compare all the previous algorithms in order to
+decide which one performs better. To accomplish that, the F\textsubscript{1} measure has been
+calculated and compared for all 3 algorithms. However, this measure is
+easily affected by various parameters so it is not enough on its own to
+determine which algorithm performs better. Therefore the algorithms have been
+tested with the T-test and ANOVA methods. 
+
+T-tests and analysis of variance (ANOVA) are well-known statistical methods to
+compare group means.
+
+\section{Training}
+
+The three algorithms have been trained with the clean data which has been
+provided. Afterwards the algorithms have been tested using the noisy data. From
+the testing the F\textsubscript{1}  Measure has been calculated and it
+presented below.
+
+\begin{center}
+    \begin{tabular}{| l || c | c | c | c | c | c | c | } \hline
+        Emotion & Anger 1 & Disgust 2 & Fear 3 & Happiness 4 & Sadness 5 & Surprise 6  & Average \\ \hline \hline
+        Decision & 0.6667  & 1.0000 & 0.9444 & 1.0000 & 0.7500  & 1.0000 & 0.8581\\ \hline
+        Neural Networks & 1.0000 & 1.0000 & 0.7785 & 1.0000 & 0.8182 & 1.0000 & 0.9049 \\ \hline
+        CBR & 0.2759  &  0.0000 &  0.9143 & 1.0000 & 0.5714 &  1.0000 & 0.6269 \\ \hline
+    \end{tabular}\vspace{5pt}\\
+    F\textsubscript{1} measures for each algorithm for each emotion (trained with clean data  and tested with the noisy data)
+    \end{center}
+
+\subsection{Highest average F\textsubscript{1} measure}
+As it can be observed the Neural Networks algorithm has the highest average F\textsubscript{1} measure. 
+
+\subsection{Algorithm performance}
+We have seen that neural networks have performed better for this problem, but
+it is not possible to extrapolate this to mean it is a better algorithm. All of
+these algorithms have inherent advantages and disadvantages. Neural Networks
+for example don't have fixed performance, its performance depends on the
+initial weights and biases. The current problem features can take only two
+values 0 and 1 preventing the similarity function of the CBR to get
+sufficient information from the distance between two cases. In the case
+that the features could take more values then the CBR would have outperformed the NN.
+
+During cross validation Decision Trees had an initial error of 14\% due to
+being unable to classify an instance with any label or with multiple
+labels. This problem partially is due to errors propagating through the
+tree, after an early incorrect decision in the tree the error propagates to
+an incorrect label. To lower this error value, we used the concept of
+applying the label to a case with the least distance traversed in the tree.
+Due to higher nodes having a higher information gain.
+
+\section{Testing}
+
+\subsection{Clean data}
+
+\subsubsection{T-tests}
+
+    \begin{center}
+    \begin{tabular}{|l ||c|c|c|} \hline
+    & DT - ANN & DT - CBR & CBR - ANN\\ \hline \hline
+    Anger & 0 & 0 & 0 \\ \hline
+    Disgust & 0 & 0 & 0 \\ \hline
+    Fear & 0 & 0 & 0 \\ \hline
+    Happiness & 0 & 0 & 0 \\ \hline
+    Sadness & 0 & 0 & 0 \\ \hline
+    Surprise & 0 & 0 & 0 \\ \hline
+    \end{tabular}\vspace{5pt}\\
+    Clean data t-test
+    \end{center}
+
+T-tests between algorithms test the hypothesis that two independent samples, in
+the vectors X and Y, come from distributions with equal means. For all the
+tests above the null hypothesis can not be rejected, for any result, at the 5\%
+significance level because the algorithm means are equal. 
+
+\subsubsection{ANOVA tests}
+
+    \begin{center}
+    \begin{tabular}{|c||r|r|r|r|r|r|} \hline 
+    Emotion & Anger & Disgust & Fear & Happiness & Sadness & Surprise \\ \hline \hline
+    P-value & 0.2892 & 0.3097 & 0.6328 & 1.0000 & 0.1961 & 0.3811 \\ \hline
+    \end{tabular}\vspace{5pt}\\
+    Clean data ANOVA tests
+    \end{center}
+
+ANOVA tests perform comparisons of the means of the three different algorithms
+that were implemented. It returns a p-value for the null hypothesis that the
+means of the groups are equal. The p-value is essentially a significance level.
+In our case the significance level is defined as 5\% and as we can see from the
+results none of the P-values are lower than that level and therefore the null
+hypothesis can not be rejected. The lower value appears for `Sadness' which
+means that the algorithms disagree the most for that class while the higher
+value is for `Happiness' and means that all algorithms are very similar
+regarding that class.
+
+\subsubsection{Multi comparison tests}
+
+    \begin{center}
+    \begin{tabular}{|c||r|r|r|r|r|r|r|r|r|} \hline 
+    & \multicolumn{3}{|c|}{DT \& NN} & \multicolumn{3}{|c|}{DT \& CBR} & \multicolumn{3}{|c|}{NN \& CBR} \\ \hline \hline
+    Anger & -0.5146 & -0.2200 & 0.0746 &-0.3813 & -0.0867 & 0.2079 & -0.1613 & 0.1333 & 0.4279\\ \hline
+    Disgust & -0.0593 & 0.0333 & 0.1259 & -0.0250 & 0.0676 & 0.1602 & -0.0583 & 0.0343& 0.1269 \\ \hline
+    Fear & -0.6442 & -0.2000 & 0.2442 & -0.5442 & -0.1000 & 0.3442 & -0.3442 & 0.1000 & 0.5442 \\ \hline
+    Happiness & 0 & 0 & 0& 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+    Sadness & -0.3441 & -0.1367 & 0.0708 & -0.3775 & -0.1700 & 0.0375 & -0.2408 & -0.0333 & 0.1741 \\ \hline
+    Surprise & -0.0550 & -0.0200 & 0.0150 & -0.0550 & -0.0200 & 0.0150 & -0.0350 & 0 & 0.0350 \\ \hline
+    \end{tabular}\vspace{5pt}\\
+    Clean data multi comparison tests
+    \end{center}
+
+\subsection{Noisy data}
+\subsubsection{T-tests}
+Test results same as for clean data.
+
+\subsubsection{ANOVA tests}
+
+    \begin{center}
+    \begin{tabular}{|c||r|r|r|r|r|r|} \hline 
+    Emotion & Anger & Disgust & Fear & Happiness & Sadness & Surprise \\ \hline \hline
+    P-value & 0.4886 & 1.0000 & 0.4939 & 1.0000 & 0.7225 & 0.3811 \\ \hline
+    \end{tabular}\vspace{5pt}\\
+    Noisy data ANOVA tests
+    \end{center}
+
+From the ANOVA test results above, we can see that again all the P-values are
+above the significance level which is set at 5\%. All algorithms perform very
+similar for the classification of the emotions `Happiness' and `Disgust'.
+
+\subsubsection{Multi comparison tests}
+
+    \begin{center}
+    \begin{tabular}{|c||r|r|r|r|r|r|r|r|r|} \hline 
+    & \multicolumn{3}{|c|}{DT \& NN} & \multicolumn{3}{|c|}{DT \& CBR} & \multicolumn{3}{|c|}{NN \& CBR} \\ \hline \hline
+    Anger & -0.2170 & 0.0833 & 0.3837 & -0.1303 & 0.1700 & 0.4703 & -0.2137 & 0.0867 & 0.3870 \\ \hline
+    Disgust & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\ \hline
+    Fear & -0.4293 & -0.0667 & 0.2960 & -0.2293 & 0.1333 & 0.4960 & -0.1627 & 0.2000 & 0.5627 \\ \hline
+    Happiness & 0 & 0 & 0& 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+    Sadness & -0.2234 & 0.1200 & 0.4634 & -0.3268 & 0.0167 & 0.3601 & -0.4468 & -0.1033 & 0.2401 \\ \hline
+    Surprise & -0.0393 & -0.0143 & 0.0107 & -0.0393 & -0.0143 & 0.0107 & -0.0250 & 0 & 0.0250 \\ \hline
+    \end{tabular}\vspace{5pt}\\
+    Noisy data multi conparison tests
+    \end{center}
+
+As we can see, the multi comparison tests agree with the ANOVA tests for the
+`Happiness' and `Disgust' emotion where the p-value is 1. That is the reason
+the mean value difference in the multiple comparison tests for the emotion
+`Happiness' is zero. 
+
+\section{Adding new emotion classes}
+
+The more suitable algorithm for adding new emotion classes is the Case Based
+Reasoning. The CBR will only need from the user to add the new class and the
+cases that lead to that class. Then the algorithm is ready to start classifying
+the data without the need to rebuild it from the beginning.
+
+The decision trees can easily incorporate the new classes as well. However,
+they will need some more engineering effort than the CBR. The reason for this
+is that for the Decision Trees algorithm there is a discrete decision tree for
+each class, so the only thing that is needed is to create a decision
+tree for each one of the new classes. The rest decision trees, for the old
+classes, will be the same. 
+
+On the other hand, the neural networks will require a lot more effort than both
+of the other algorithms. The neural networks have to retrain from the beginning
+using the new data, the data with the new classes. Additionally, it will be
+needed from us to make experiments with different values for the parameters of
+the network, in order to find those that perform best.  
+
+
+\section{Results} 
+Looking through the cross validation and the tests, we can see that all
+classifiers perform likewise. In addition, from the overall results it is
+important to note that the emotion Happiness has a P-value of 1 for both the
+clean and the noisy data set. This means that for that particular class, all 3
+algorithms we have implemented perform have the same means. Lastly, the
+P-values returned from both ANOVA tests were always above the significant level
+of 5\%. Nevertheless, the multiple comparison tests were executed to provide
+more information for comparing the different algorithms.
+
+
+\section{T-test and ANOVA assumptions}
+\subsection{T-test}
+To reliably run a t-test in Matlab, the two most fundamental assumptions that
+are needed are the below:
+
+\begin{enumerate}
+\item The population data have almost the same variances.
+\item The population data must follow a normal distribution. However in some
+occasions the t-test still works even if the distribution is close to normal.
+\end{enumerate}
+
+If normality is not violated, a weighted t-test can be used. An example of
+this is the  Welch's t-test.
+
+\subsection{ANOVA}
+The ANOVA test makes the below assumptions:
+
+\begin{enumerate}
+\item Independence on the data samples.
+\item The population data must follow a normal distribution
+\item The population data must have equal variance (Homogeneity of variances).
+\end{enumerate}
+
+However the ANOVA is more robust for the violation for the population data
+assumptions. 
+
+If the the population data is non-normal then the ANOVA F-test can be used.
+F-test is very robust against data that doesn't follow a normal distribution,
+especially in a fixed-effects model. In case of a non-normal data the Central
+Limit Theorem can be used. Another solution is to apply data transformation by
+paying attention not to change the relationship between the dependent and the
+independent variables. Finally the Kruskal–Wallis test  can be used since it is
+a non-parametric and so it doesn't assume a normal distribution.
+
+In case the data samples are not independent, then there are correlations
+between independent variables and errors. One solution for this is to design
+the model so that it takes correlation into account. This can be done with
+crossover design. Another solution is to add covariates to the model if they
+are causing correlation. To accomplish that use quantified learning curves.
+
+Lastly if the population data doesn't have equal variances then the omnibus
+F-test can be used. That's because it is very robust against heterogeneity of
+variances, especially with fixed effects and equal sample sizes.
+
+Studies show that in the occasion that those assumptions don’t hold, three
+cases have to consider:
+
+Case 1 : Normality is not violate\\
+Solution 1 : Use a weighted ANOVA like Welch's ANOVA\\
+
+Case 2: Normality is violated\\
+Solution 2: Normalising the data using transformation will usually stabilise
+variances as well.\\
+
+Case 3: Variances are still heterogeneous\\
+Solution 3: Use non-parametric alternative tests like the Kruskal-Wallis test
+and the median test.\\
+
+
+\end{document}
